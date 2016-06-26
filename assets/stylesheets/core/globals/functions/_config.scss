@@ -1,0 +1,111 @@
+/// ----------------------------------------------------------------------------
+/// Fetches nested keys
+///
+/// @author at-import <https://github.com/at-import/sassy-maps>
+/// @param  {Map}     $map  - Map
+/// @param  {Arglist} $keys - Keys to fetch
+/// @return {*}
+/// ----------------------------------------------------------------------------
+@function map-get-deep($map, $keys...) {
+  @if length($keys) == 1 {
+    $keys: nth($keys, 1);
+  }
+  $warn: "#{nth($keys, 1)}";
+  $length: length($keys);
+  $get: map-get($map, nth($keys, 1));
+
+  @if $length > 1 {
+    @for $i from 2 through $length {
+      @if $get != null and type-of($get) == 'map' {
+        // $warn: $warn + "->#{nth($keys, $i)}";
+        $get: map-get($get, nth($keys, $i));
+
+        // @if $get == null {
+        //   @return map-get-deep-warning($warn, $get, nth($keys, $i));
+        // }
+      }
+      @else {
+        // @return map-get-deep-warning($warn, $get, nth($keys, $i));
+        @return null;
+      }
+    }
+  }
+
+  @return $get;
+}
+
+
+/// ----------------------------------------------------------------------------
+/// Splits `$string` into several parts using `$delimiter`
+///
+/// @author Hugo Giraudel <https://github.com/HugoGiraudel/SassyStrings>
+/// @param  {String} $string         - String to split
+/// @param  {String} $delimiter [''] - String to use as a delimiter to split
+///                                    `$string`
+/// @return {List}
+/// ----------------------------------------------------------------------------
+@function str-explode($string, $delimiter: '') {
+  // @if type-of($string) != 'string' {
+  //   @error '`explode` function expecting a string; #{type-of($string)} given.';
+  // }
+  //
+  // @if type-of($delimiter) != 'string' {
+  //   @error '`explode` function expecting a string; #{type-of($delimiter)} given.';
+  // }
+
+  $result: ();
+  $length: str-length($string);
+
+  @if str-length($delimiter) == 0 {
+    @for $i from 1 through $length {
+      $result: append($result, str-slice($string, $i, $i));
+    }
+
+    @return $result;
+  }
+
+  $running: true;
+  $remaining: $string;
+
+  @while $running {
+    $index: str-index($remaining, $delimiter);
+
+    @if $index {
+      $slice: str-slice($remaining, 1, $index - 1);
+      $result: append($result, $slice);
+      $remaining: str-slice($remaining, $index + str-length($delimiter));
+    } @else {
+      $running: false;
+    }
+  }
+
+  @return append($result, $remaining);
+}
+
+
+/// ----------------------------------------------------------------------------
+/// Creates a shortcut to return a setting value
+///
+/// @param  {List}     $props             - List of properties
+/// @param  {Map}      $map   [$settings] - Settings map
+/// @return {Function}
+/// ----------------------------------------------------------------------------
+@function setting($props, $map: $settings) {
+  $props-list: str-explode($props, $delimiter: '.');
+
+  @if length($props-list) > 1 {
+    @return map-get-deep($map, $props-list);
+
+  } @else {
+    @return map-get($map, nth($props, 1));
+  }
+}
+
+
+@function config($setting, $default: null) {
+  @if setting($setting) {
+    @return setting($setting);
+  } @else {
+    @return $default;
+  }
+}

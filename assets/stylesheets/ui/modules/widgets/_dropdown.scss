@@ -1,0 +1,10 @@
+.m--dropdown {
+  .dropdown--block {
+    display: none;
+    position: absolute;
+  }
+
+  &:hover .dropdown--block {
+    display: block;
+  }
+}

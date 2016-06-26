@@ -1,0 +1,6 @@
+.m--header {
+  margin: config('modules.header.margin');
+  padding: config('modules.header.padding');
+  background-color: config('modules.header.background-color');
+  border: config('modules.header.border');
+}

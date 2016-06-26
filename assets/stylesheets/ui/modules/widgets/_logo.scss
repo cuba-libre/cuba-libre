@@ -1,0 +1,7 @@
+.m--logo {
+  margin: config('modules.logo.margin');
+  padding: config('modules.logo.padding');
+
+  .logo--link {}
+  .logo--image {}
+}

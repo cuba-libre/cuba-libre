@@ -1,0 +1,23 @@
+$devices: 'mobile', 'tablet', 'desktop', 'wide';
+
+@each $device in $devices {
+  [show="from-#{$device}"] {
+    @include mq($from: $device) {
+      display: block;
+    }
+
+    @include mq($until: $device) {
+      display: none;
+    }
+  }
+
+  [hide="from-#{$device}"] {
+    @include mq($from: $device) {
+      display: none;
+    }
+
+    @include mq($until: $device) {
+      display: block;
+    }
+  }
+}
