@@ -1,0 +1,9 @@
+$blue:                        #1565c0;
+$dark-gray:                   #333;
+$medium-gray:                 #999;
+$light-gray:                  #ddd;
+$base-font-color:             $dark-gray;
+$action-color:                $blue;
+$base-border-color:           $light-gray;
+$base-background-color:       #fff;
+$secondary-background-color:  tint($base-border-color, 75%);
